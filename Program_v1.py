@@ -1,7 +1,7 @@
 import requests
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Unapred postavljeni API ključ
 API_KEY = "dd611f339cda91b54411dc549a7b1c0a"
@@ -18,8 +18,9 @@ def kelvin_to_celsius(kelvin):
     return kelvin - 273.15
 
 def convert_unix_time(unix_time):
-    # Konverzija UNIX vremena u formatiranu datuim-vreme
-    return datetime.utcfromtimestamp(unix_time).strftime('%Y-%m-%d %H:%M:%S')
+    # Konverzija UNIX vremena u formatiranu datum-vreme koristeći vremensku zonu UTC
+    return datetime.fromtimestamp(unix_time, timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+
 
 def get_weather_data(lat, lon, api_key):
     # Kreiranje URL-a sa parametrima
