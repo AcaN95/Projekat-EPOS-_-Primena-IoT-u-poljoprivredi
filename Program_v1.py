@@ -5,6 +5,65 @@ from datetime import datetime, timezone
 
 # Unapred postavljeni API ključ
 API_KEY = "dd611f339cda91b54411dc549a7b1c0a"
+AdresaNodeMcu = "192.168.208.172"
+
+def NodeMcu(AdresaNodeMcu):
+    while True:
+        response = requests.get(f"http://{AdresaNodeMcu}/sensor")
+        data = response.json()
+
+        temperatura = data.get("temperatura")
+        vlaznost = data.get("vlaznost")
+
+        if temperatura is not None and vlaznost is not None:
+            temperatura = round(temperatura, 2)
+            vlaznost = round(vlaznost, 2)
+            print(f"Temperatura: {temperatura} °C")
+            print(f"Vlažnost: {vlaznost} %")
+        else:
+            print("Nemoguće pročitati podatke sa senzora DHT!")
+
+        response = requests.get(f"http://{AdresaNodeMcu}/relayState")
+        data = response.json()
+        print(f"Relay1 je {data.get('Relay1')}")
+        print(f"Relay2 je {data.get('Relay2')}")
+        print(" ")
+        print("11. Ukljuci relej1             10. Iskljuci relej2")
+        print("21. Ukljuci relej2             20. Iskljuci relej2")
+        print("1. Ukljuci relej1 i relej2     0. Iskljuci relej2 i relej2")
+        print(" ")
+        print("2. Nazad")
+        print("3. Izlaz")
+
+        url = f"http://{AdresaNodeMcu}/relay"
+        payload=" "
+        # Unos korisničkog izbora
+        choice = input("Unesite broj opcije: ")
+
+        # Provera korisničkog izbora
+        if choice == "2":
+            # Korisnik želi da se vrati nazad
+            break
+        elif choice == "3":
+            # Korisnik želi da izađe iz programa
+            return
+        elif choice == "11":
+            payload = {"relay1": 0}
+        elif choice == "21":
+            payload = {"relay2": 0}
+        elif choice == "10":
+            payload = {"relay1": 1}
+        elif choice == "20":
+            payload = {"relay2": 1}
+        elif choice == "0":
+            payload = {"relay1": 1,"relay2": 1}
+        elif choice == "1":
+            payload = {"relay1": 0,"relay2": 0}
+        response = requests.post(url, json=payload)
+        payload=" "
+        clear_terminal()
+
+
 
 def clear_terminal():
     # Očisti terminal (Linux/Unix)
@@ -120,7 +179,8 @@ def list_parcels(api_key):
         for index, polygon_data in enumerate(polygon_data_list, start=1):
             print(f"{index}. {polygon_data['name']}")
         print(" ")
-        print(f"{len(polygon_data_list)+1}. Nazad")
+        print(f"{len(polygon_data_list)+1}. Nodemcu")
+        #print(f"{len(polygon_data_list)+2}. Nazad")
         print(f"{len(polygon_data_list)+2}. Izlaz")
 
         # Unos korisničkog izbora
@@ -132,8 +192,11 @@ def list_parcels(api_key):
             print(f"Izabrana parcela: {selected_polygon['name']}")
             return selected_polygon
         elif selected_index == len(polygon_data_list):
-            # Korisnik želi da se vrati nazad
+            clear_terminal()
+            NodeMcu(AdresaNodeMcu)
+            selected_polygon = polygon_data_list[1]
             return None
+        
         elif selected_index == len(polygon_data_list) + 1:
             # Korisnik želi da završi program
             print("Izlaz iz programa.")
@@ -145,6 +208,7 @@ def list_parcels(api_key):
     else:
         print(f"Greška u zahtevu. Status code: {response.status_code}")
         return None
+
 
 
 def display_parcel_options(selected_polygon):
@@ -192,10 +256,6 @@ def display_parcel_options(selected_polygon):
             clear_terminal()
             # Poziv funkcije za dobijanje podataka o zemljištu
             get_soil_data(poly_id, API_KEY)
-        elif option_choice == "5":
-            clear_terminal()
-            # Dodajte logiku za petu opciju
-            print("Izabrana je opcija 5.")
         elif option_choice == "6":
             clear_terminal()
             # Vraćanje korak unazad
@@ -217,6 +277,4 @@ if __name__ == "__main__":
             # Prikaz opcija za izabranu parcelu
             clear_terminal()
             display_parcel_options(selected_polygon)
-        else:
-            # Korisnik je odabrao opciju "Nazad" ili "Izlaz"
-            break
+        
