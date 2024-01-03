@@ -1,3 +1,8 @@
+Iot u poljoprivredi projekat
+Kreirati Python alikaciju koja će komunicirati sa javnim AgroAPI ili nekim sličnim i dobijene podatke prikazati kroz aplikaciju .
+
+
+
 Projekat uraditi pomocu pytona (Verovatno UI cist terminal)
 
 Podaci koje bismo mogli da prikazemo
@@ -6,13 +11,11 @@ Temperatura vazduha, vlažnost, brzina vetra, padavine, UV indeks itd.
 Informacije o trenutnim cenama poljoprivrednih proizvoda na tržištu.
 Informacije o trenutnim zalihama, skladištima, preporuke za upravljanje zalihama.
 
+Nisam uspeo da pronadjem api za cene..
+
 
 (Terminal je u pitanju i prikazivanje podataka je tesko.. Za Srbiju verovatno ne mozemo da pronadjemo neki dobar API koji ce da pokriva sve to..)
 
 
-
-
-https://fonbgacrs-my.sharepoint.com/personal/jelica_stanojevic_fon_bg_ac_rs/_layouts/15/onedrive.aspx?login_hint=an20230320%40student%2Efon%2Ebg%2Eac%2Ers&id=%2Fpersonal%2Fjelica%5Fstanojevic%5Ffon%5Fbg%5Fac%5Frs%2FDocuments%2FOIKT%20materijali%2FSnimci&FolderCTID=0x012000ABF000E8B4D4C64892B70D0C076DF0A7&view=0
-
-
-asa
+agromonitoring.com
+key -- dd611f339cda91b54411dc549a7b1c0a

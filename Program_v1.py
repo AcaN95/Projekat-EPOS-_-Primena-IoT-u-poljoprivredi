@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 # Unapred postavljeni API ključ
 API_KEY = "dd611f339cda91b54411dc549a7b1c0a"
-AdresaNodeMcu = "192.168.208.172"
+AdresaNodeMcu = "192.168.243.172"
 
 def NodeMcu(AdresaNodeMcu):
     while True:
