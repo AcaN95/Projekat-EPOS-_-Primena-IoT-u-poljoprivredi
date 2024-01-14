@@ -12,10 +12,7 @@ ESP8266WebServer server(80);
 
 #define DHTPIN 2 //d4
 #define DHTTYPE DHT11
-
 DHT dht(DHTPIN, DHTTYPE);
-
-
 #define RELAY1_PIN  4  // Povežite prvi relej sa digitalnim pinom d1
 #define RELAY2_PIN  5  // Povežite drugi relej sa digitalnim pinom d2
 
@@ -27,11 +24,9 @@ void setup() {
   Serial.begin(115200);
 
 
-// Postavljanje pinova releja kao izlaz
   pinMode(RELAY1_PIN, OUTPUT);
   pinMode(RELAY2_PIN, OUTPUT);
 
-  // Isključivanje oba releja na početku
   digitalWrite(RELAY1_PIN, HIGH);
   digitalWrite(RELAY2_PIN, HIGH);
 
@@ -39,7 +34,6 @@ void setup() {
 int relayState2 = digitalRead(RELAY2_PIN);
 
 dht.begin();
-  // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -48,7 +42,6 @@ dht.begin();
   Serial.println("Connected to WiFi");
   Serial.println(WiFi.localIP());
 
-  // Define HTTP endpoints
   server.on("/sensor", HTTP_GET, handleGetSensor);
   server.on("/relay", HTTP_POST, handlePostRelay);
   server.on("/relayState", HTTP_GET, handleGetRelayState);
@@ -62,8 +55,6 @@ void loop() {
   server.handleClient();
   temperatura = dht.readTemperature();
   vlaznost = dht.readHumidity();
-
-  // Provera da li su podaci validni
   if (isnan(temperatura) || isnan(vlaznost)) {
     Serial.println("Nemoguće pročitati podatke sa senzora DHT!");
     return;
@@ -71,7 +62,6 @@ void loop() {
 }
 
 void handleGetSensor() {
-  // Respond with JSON containing sensor data
   StaticJsonDocument<200> doc;
   doc["temperatura"] = temperatura;
    doc["vlaznost"] = vlaznost;
@@ -82,7 +72,6 @@ void handleGetSensor() {
 }
 
 void handleGetRelayState() {
-  // Respond with JSON containing sensor data
   StaticJsonDocument<200> doc;
 if(digitalRead(RELAY1_PIN)==0)
   doc["Relay1"] = "ukljucen";
@@ -98,7 +87,6 @@ if(digitalRead(RELAY1_PIN)==0)
 }
 
 void handlePostRelay() {
-  // Parse JSON and set relay state
   StaticJsonDocument<200> doc;
   deserializeJson(doc, server.arg("plain"));
   String jsonString;
@@ -120,6 +108,7 @@ Serial.println(jsonString);
   digitalWrite(RELAY2_PIN, LOW);
   Serial.println(String(relayState1)+String(relayState2));
 
-server.send(200, "text/plain", "Relej1 je " + String(digitalRead(RELAY1_PIN)) + " Relej2 je " + String(digitalRead(RELAY2_PIN)));
+server.send(200, "text/plain", "Relej1 je " + String(digitalRead(RELAY1_PIN)) + 
+" Relej2 je " + String(digitalRead(RELAY2_PIN)));
 
 }
